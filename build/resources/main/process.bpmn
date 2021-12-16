@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_0fr9mxs" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.11.1">
+  <bpmn:process id="my-project-process" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Upload Document">
+      <bpmn:outgoing>Flow_17487h6</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_17487h6" sourceRef="StartEvent_1" targetRef="Activity_083zf78" />
+    <bpmn:serviceTask id="Activity_083zf78" name="Parse Document" camunda:class="com.YvesJadTarek.EAI_AST.CamundaTasks.ParsingTask">
+      <bpmn:incoming>Flow_17487h6</bpmn:incoming>
+      <bpmn:outgoing>Flow_1lw7yi0</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1lw7yi0" sourceRef="Activity_083zf78" targetRef="Activity_0c2lyey" />
+    <bpmn:userTask id="Activity_0c2lyey" name="Approve Project">
+      <bpmn:incoming>Flow_1lw7yi0</bpmn:incoming>
+      <bpmn:outgoing>Flow_0dyozg9</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_02rtdv5" name="isValidated">
+      <bpmn:incoming>Flow_0dyozg9</bpmn:incoming>
+      <bpmn:outgoing>Flow_0dus8f0</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1n9c6z0</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0dyozg9" sourceRef="Activity_0c2lyey" targetRef="Gateway_02rtdv5" />
+    <bpmn:sequenceFlow id="Flow_0dus8f0" name="Teacher validation" sourceRef="Gateway_02rtdv5" targetRef="Activity_1bw96tg">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{isValidated}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="Event_0bt5fhr" name="Project accepted">
+      <bpmn:incoming>Flow_0fha41u</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0fha41u" sourceRef="Activity_1bw96tg" targetRef="Event_0bt5fhr" />
+    <bpmn:endEvent id="Event_0jdj9ly" name="Project rejected">
+      <bpmn:incoming>Flow_1n9c6z0</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1n9c6z0" name="Teacher non validation" sourceRef="Gateway_02rtdv5" targetRef="Event_0jdj9ly">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{not isValidated}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="Activity_1bw96tg" name="Store Document" camunda:class="com.YvesJadTarek.EAI_AST.CamundaTasks.SaveTask">
+      <bpmn:incoming>Flow_0dus8f0</bpmn:incoming>
+      <bpmn:outgoing>Flow_0fha41u</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="my-project-process">
+      <bpmndi:BPMNEdge id="Flow_1lw7yi0_di" bpmnElement="Flow_1lw7yi0">
+        <di:waypoint x="370" y="117" />
+        <di:waypoint x="500" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_17487h6_di" bpmnElement="Flow_17487h6">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="270" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dyozg9_di" bpmnElement="Flow_0dyozg9">
+        <di:waypoint x="600" y="117" />
+        <di:waypoint x="715" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dus8f0_di" bpmnElement="Flow_0dus8f0">
+        <di:waypoint x="765" y="117" />
+        <di:waypoint x="880" y="117" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="778" y="99" width="89" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0fha41u_di" bpmnElement="Flow_0fha41u">
+        <di:waypoint x="980" y="117" />
+        <di:waypoint x="1102" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1n9c6z0_di" bpmnElement="Flow_1n9c6z0">
+        <di:waypoint x="740" y="142" />
+        <di:waypoint x="740" y="230" />
+        <di:waypoint x="932" y="230" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="725" y="183" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="153" y="142" width="89" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0h0slc7_di" bpmnElement="Activity_083zf78">
+        <dc:Bounds x="270" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ir27f7_di" bpmnElement="Activity_0c2lyey">
+        <dc:Bounds x="500" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_02rtdv5_di" bpmnElement="Gateway_02rtdv5" isMarkerVisible="true">
+        <dc:Bounds x="715" y="92" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="713" y="68" width="53" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0bt5fhr_di" bpmnElement="Event_0bt5fhr">
+        <dc:Bounds x="1102" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1079" y="142" width="82" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0jdj9ly_di" bpmnElement="Event_0jdj9ly">
+        <dc:Bounds x="932" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="912" y="255" width="77" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0osfxq8_di" bpmnElement="Activity_1bw96tg">
+        <dc:Bounds x="880" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
